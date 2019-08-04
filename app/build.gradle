@@ -63,4 +63,8 @@ dependencies {
 
     //Animations
     implementation "com.andkulikov:transitionseverywhere:2.0.0"
+
+    //Kotlinx Serialization
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.10.0"
+
 }
