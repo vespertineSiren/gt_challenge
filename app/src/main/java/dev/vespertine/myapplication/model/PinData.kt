@@ -1,4 +1,4 @@
-package dev.vespertine.myapplication
+package dev.vespertine.myapplication.model
 
 data class PinData(
     val description: String,
