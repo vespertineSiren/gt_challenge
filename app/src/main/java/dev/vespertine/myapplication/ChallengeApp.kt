@@ -13,6 +13,8 @@ class ChallengeApp : Application() {
     override fun onCreate() {
         super.onCreate()
 
+
+
         mainComponent = DaggerMainComponent.builder()
             .build()
     }
