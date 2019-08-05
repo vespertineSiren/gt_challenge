@@ -6,6 +6,7 @@ import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
 import dev.vespertine.myapplication.di.component.DaggerAppComponent
+import dev.vespertine.myapplication.utils.Utils
 import javax.inject.Inject
 
 
@@ -19,6 +20,7 @@ class ChallengeApp : Application(), HasActivityInjector {
 
         DaggerAppComponent.builder()
             .application(this)
+            .baseUrl(Utils.CHALLENGE_URL)
             .build().inject(this)
     }
 

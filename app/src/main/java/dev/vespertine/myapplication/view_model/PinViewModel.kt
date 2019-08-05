@@ -1,3 +1,7 @@
 package dev.vespertine.myapplication.view_model
 
-class PinViewModel()
+import javax.inject.Inject
+
+class PinViewModel @Inject constructor( ) {
+
+}

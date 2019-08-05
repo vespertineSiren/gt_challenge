@@ -2,6 +2,8 @@ package dev.vespertine.myapplication.di.module
 
 import dagger.Module
 import dagger.Provides
+import dev.vespertine.myapplication.api.GoTennaApi
+import dev.vespertine.myapplication.model.PinData
 import dev.vespertine.myapplication.utils.Utils
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -32,5 +34,11 @@ class NetworkModule {
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .build()
     }
+
+    @Provides
+    @Singleton
+    fun providesGoTennaApiService(retrofit : Retrofit) : GoTennaApi =
+        retrofit.create(GoTennaApi::class.java)
+
 
 }

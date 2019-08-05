@@ -7,18 +7,22 @@ import dagger.android.support.AndroidSupportInjectionModule
 import dev.vespertine.myapplication.ChallengeApp
 import dev.vespertine.myapplication.di.module.AppModule
 import dev.vespertine.myapplication.di.module.BuildersModule
+import dev.vespertine.myapplication.di.module.NetworkModule
 import javax.inject.Singleton
 
 @Singleton
 @Component(modules = [(AndroidSupportInjectionModule::class),
     (AppModule::class),
-    (BuildersModule::class)])
+    (BuildersModule::class),
+    (NetworkModule::class)])
 interface AppComponent {
 
     @Component.Builder
     interface Builder {
         @BindsInstance
         fun application(application: Application) : AppComponent.Builder
+        @BindsInstance
+        fun baseUrl(url : String) : AppComponent.Builder //For testing mockserver
         fun build(): AppComponent
 
     }
