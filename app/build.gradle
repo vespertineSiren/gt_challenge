@@ -36,7 +36,6 @@ dependencies {
     implementation 'com.google.android.material:material:1.0.0'
 
 
-    implementation 'com.google.android.gms:play-services-location:17.0.0'
 
     // Mapbox
     implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:8.2.1'
@@ -70,5 +69,8 @@ dependencies {
 
     //Kotlinx Serialization
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.10.0"
+
+    implementation 'com.google.android.gms:play-services-location:17.0.0'
+    implementation 'com.google.android.gms:play-services-maps:17.0.0'
 
 }

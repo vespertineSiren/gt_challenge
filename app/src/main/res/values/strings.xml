@@ -3,4 +3,9 @@
     <string name="access_token">
         pk.eyJ1IjoidmVzcGVydGluZXNpcmVuIiwiYSI6ImNqeXhlczZwazByOGkzaGxnZWE4NGcxdmQifQ.TqOqgkLy4ARORpuG-_mnnQ
     </string>
+    <string name="pin_name_text">Name:</string>
+    <string name="pin_lat_text">Latitude:</string>
+    <string name="pin_long_text">Longitude:</string>
+    <string name="tv_pin_long_text">Longitude</string>
+
 </resources>

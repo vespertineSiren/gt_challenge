@@ -5,7 +5,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".activity.BaseActivity">
+        tools:context=".activity.PinActivity">
 
     <!-- ID above can be renamed
         Must be given a context
@@ -28,7 +28,6 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/content_base"/>
-
+    <include layout="@layout/content_base" android:id="@+id/include"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

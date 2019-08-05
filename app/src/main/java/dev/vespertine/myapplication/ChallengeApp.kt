@@ -1,23 +1,27 @@
 package dev.vespertine.myapplication
 
+import android.app.Activity
 import android.app.Application
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import dev.vespertine.myapplication.di.component.DaggerMainComponent
-import dev.vespertine.myapplication.di.component.MainComponent
+import dagger.android.AndroidInjector
+import dagger.android.DispatchingAndroidInjector
+import dagger.android.HasActivityInjector
+import dev.vespertine.myapplication.di.component.DaggerAppComponent
+import javax.inject.Inject
 
-class ChallengeApp : Application() {
 
-    private lateinit var mainComponent: MainComponent
+class ChallengeApp : Application(), HasActivityInjector {
+
+    @Inject
+    lateinit var activityInjector: DispatchingAndroidInjector<Activity>
 
     override fun onCreate() {
         super.onCreate()
 
-
-
-        mainComponent = DaggerMainComponent.builder()
-            .build()
+        DaggerAppComponent.builder()
+            .application(this)
+            .build().inject(this)
     }
 
-    fun getMainComponent() = mainComponent
+    override fun activityInjector(): AndroidInjector<Activity> = activityInjector
+
 }
