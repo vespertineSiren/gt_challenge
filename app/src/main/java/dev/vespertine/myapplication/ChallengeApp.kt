@@ -6,8 +6,15 @@ import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
 import dev.vespertine.myapplication.di.component.DaggerAppComponent
+import dev.vespertine.myapplication.di.module.AppModule
+import dev.vespertine.myapplication.di.module.NetworkModule
 import dev.vespertine.myapplication.utils.Utils
 import javax.inject.Inject
+import android.app.ProgressDialog
+import com.google.android.gms.location.LocationServices
+import com.mapbox.mapboxsdk.maps.MapboxMap
+
+
 
 
 class ChallengeApp : Application(), HasActivityInjector {
@@ -18,10 +25,13 @@ class ChallengeApp : Application(), HasActivityInjector {
     override fun onCreate() {
         super.onCreate()
 
+
         DaggerAppComponent.builder()
             .application(this)
             .baseUrl(Utils.CHALLENGE_URL)
             .build().inject(this)
+
+
     }
 
     override fun activityInjector(): AndroidInjector<Activity> = activityInjector

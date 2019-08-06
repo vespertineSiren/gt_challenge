@@ -12,7 +12,7 @@ import io.reactivex.Single
 interface PinDao : BaseDao<PinData> {
 
     @Query("SELECT * FROM  pin_data ORDER BY pin_id ASC")
-    fun getAllPinsInIDOrder() : Maybe<List<PinData>>
+    fun getAllPinsInIDOrder() : Single<List<PinData>>
 
 
 }

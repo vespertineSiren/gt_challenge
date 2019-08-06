@@ -13,6 +13,12 @@ import javax.inject.Singleton
 @Module
 class AppModule {
 
+/*
+    @Provides
+    @Singleton
+    fun provideApplication(): Application = app
+*/
+
     @Provides
     @Singleton
     fun providePinDatabase(application: Application) : PinRoomDatabase
@@ -26,5 +32,6 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun providePinViewModelFactory(factory : PinViewModelFactory) :ViewModelProvider.Factory = factory
+    fun providePinViewModelFactory(
+        factory : PinViewModelFactory):ViewModelProvider.Factory = factory
 }

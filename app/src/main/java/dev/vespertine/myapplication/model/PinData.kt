@@ -10,11 +10,19 @@ import kotlinx.serialization.Serializable
 @Entity(tableName = "pin_data")
 @Serializable
 data class PinData(
-    val description: String? = "",
+    val description: String,
     @PrimaryKey
     @ColumnInfo(name = "pin_id")
     val id: Int,
-    val latitude: Double? = 0.0,
-    val longitude: Double? = 0.0,
-    val name: String? = null
+    val latitude: Double,
+    val longitude: Double,
+    val name: String
+)
+
+data class Fake(
+    val description: String,
+    val id: Int,
+    val latitude: Double,
+    val longitude: Double,
+    val name: String
 )

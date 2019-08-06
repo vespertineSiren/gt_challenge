@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import dev.vespertine.myapplication.model.PinData
 
-const val DATABASE_SCHEMA_VERSION = 1
+const val DATABASE_SCHEMA_VERSION = 2
 const val DB_NAME = "local-db"
 
 @Database(

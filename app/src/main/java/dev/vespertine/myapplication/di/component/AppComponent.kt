@@ -20,11 +20,10 @@ interface AppComponent {
     @Component.Builder
     interface Builder {
         @BindsInstance
-        fun application(application: Application) : AppComponent.Builder
+        fun application(application: Application) : Builder
         @BindsInstance
-        fun baseUrl(url : String) : AppComponent.Builder //For testing mockserver
+        fun baseUrl(url : String) : AppComponent.Builder //For testing mockserver*/
         fun build(): AppComponent
-
     }
 
     fun inject(instance: ChallengeApp)

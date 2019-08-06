@@ -6,6 +6,6 @@ import retrofit2.http.GET
 
 interface GoTennaApi {
 
-    @GET("/development/scripts/get_map_pins.php")
+    @GET("get_map_pins.php")
     fun getPins() : Single<List<PinData>>
 }

@@ -7,5 +7,6 @@
     <string name="pin_lat_text">Latitude:</string>
     <string name="pin_long_text">Longitude:</string>
     <string name="tv_pin_long_text">Longitude</string>
+    <string name="tv_pn_desc">Description</string>
 
 </resources>
