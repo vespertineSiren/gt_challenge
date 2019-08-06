@@ -11,6 +11,7 @@ import dev.vespertine.myapplication.di.module.NetworkModule
 import dev.vespertine.myapplication.utils.Utils
 import javax.inject.Inject
 import android.app.ProgressDialog
+import android.graphics.BitmapFactory
 import com.google.android.gms.location.LocationServices
 import com.mapbox.mapboxsdk.maps.MapboxMap
 
@@ -30,6 +31,8 @@ class ChallengeApp : Application(), HasActivityInjector {
             .application(this)
             .baseUrl(Utils.CHALLENGE_URL)
             .build().inject(this)
+
+
 
 
     }
