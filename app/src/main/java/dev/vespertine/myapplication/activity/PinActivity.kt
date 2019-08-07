@@ -2,6 +2,7 @@ package dev.vespertine.myapplication.activity
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -17,6 +18,9 @@ import com.mapbox.android.core.location.LocationEngineRequest
 import com.mapbox.android.core.location.LocationEngineResult
 import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
+import com.mapbox.geojson.Feature
+import com.mapbox.geojson.FeatureCollection
+import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.Mapbox
 import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.location.CompassEngine
@@ -37,8 +41,14 @@ import dev.vespertine.myapplication.view_model.PinViewModel
 import dev.vespertine.myapplication.view_model.PinViewModelFactory
 import kotlinx.android.synthetic.main.content_base.*
 import com.mapbox.mapboxsdk.plugins.annotation.Symbol
+import com.mapbox.mapboxsdk.style.layers.PropertyFactory
+import com.mapbox.mapboxsdk.style.layers.SymbolLayer
+import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import javax.inject.Inject
 
+const val MARKER_SOURCE : String = "markers-source"
+const val MARKER_STYLE_LAYER = "markers-style-layer"
+const val MARKER_IMAGE  = "custom-marker"
 
 class PinActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallback {
 
@@ -49,10 +59,9 @@ class PinActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallback
     lateinit var pinAdapter : PinAdapter
     lateinit var permissionManager: PermissionsManager
     lateinit var map : MapboxMap
-    lateinit var symbolManager: SymbolManager
-    private var symbol: Symbol? = null
     lateinit var locationComponent : LocationComponent
     lateinit var locationEngine: LocationEngine
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,12 +70,10 @@ class PinActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallback
         setContentView(R.layout.activity_base)
         AndroidInjection.inject(this)
         mapView.onCreate(savedInstanceState)
+
         mapView.getMapAsync(this)
 
         initRecyclerView()
-
-
-
         pinViewModel = ViewModelProviders.of(this, pinviewmodelFactory)
             .get(PinViewModel::class.java)
 
@@ -79,6 +86,8 @@ class PinActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallback
                 }
             })
 
+
+
     }
 
 
@@ -89,26 +98,46 @@ class PinActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallback
         map.setStyle(Style.MAPBOX_STREETS) {
             style ->
 //            val geoJsonOptions = GeoJsonOptions().withTolerance(0.4f)
-            symbolManager = SymbolManager(mapView, map, style, null)
-            style.addImage("pin", ContextCompat.getDrawable(this, R.drawable.pin)!!)
+//            symbolManager = SymbolManager(mapView, map, style, null)
+            style.addImage(MARKER_IMAGE, BitmapFactory.decodeResource(resources,R.drawable.pin))
 
-            enableLocationComponent(style)
 
-            val symbolOptions = SymbolOptions()
-                .withLatLng(LatLng(35.652832,
-                    139.839478))
-                .withIconImage("pin")
-                .withIconSize(1.0f)
-            //    .withTextField("A place of Fun")
-                .withSymbolSortKey(10.0f)
-                .withDraggable(false)
-            symbol = symbolManager.create(symbolOptions)
 
+            addPinsToMap(style)
+
+
+            //TODO Work on this later.
+//            enableLocationComponent(style)
+
+//            val symbolOptions = SymbolOptions()
+//                .withLatLng(LatLng(35.652832,
+//                    139.839478))
+//                .withIconImage("pin")
+//                .withIconSize(1.0f)
+//            //    .withTextField("A place of Fun")
+//                .withSymbolSortKey(10.0f)
+//                .withDraggable(false)
+//            symbol = symbolManager.create(symbolOptions)
         }
 
+    }
 
+    fun addPinsToMap(mapStyle: Style) {
 
+        pinViewModel.getPinPoints().observe(this, Observer<List<Feature>> {
+            it?.apply {
+                mapStyle.addSource(GeoJsonSource(MARKER_SOURCE, FeatureCollection.fromFeatures(it)))
+            }
+        })
 
+        mapStyle.addLayer(SymbolLayer(MARKER_STYLE_LAYER, MARKER_SOURCE)
+            .withProperties(
+                PropertyFactory.iconAllowOverlap(true),
+                PropertyFactory.iconIgnorePlacement(true),
+                PropertyFactory.iconImage(MARKER_IMAGE),
+                PropertyFactory.iconOffset(arrayOf(0f, 0f))
+            )
+        )
 
     }
 
