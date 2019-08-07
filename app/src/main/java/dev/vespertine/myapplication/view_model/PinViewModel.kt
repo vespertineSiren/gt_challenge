@@ -20,7 +20,7 @@ class PinViewModel @Inject constructor(private val pinRepository: PinRepository)
 
     fun loadPins() {
         addDisposable(pinRepository.getPins()
-            .subscribeOn(Schedulers.io())
+            .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { it->pinLiveData.postValue(it)
@@ -31,9 +31,9 @@ class PinViewModel @Inject constructor(private val pinRepository: PinRepository)
                     }
 
                 },
-                {err-> Log.e("Error Messgage", err.toString())},
-                {}
-            ))
+                {err-> Log.e("Error Messgage", err.toString())}
+            )
+        )
     }
 
     fun getPins() : LiveData<List<PinData>> = pinLiveData

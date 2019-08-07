@@ -32,8 +32,7 @@ abstract class PinRoomDatabase: RoomDatabase(){
             return Room.databaseBuilder(context, PinRoomDatabase::class.java, DB_NAME)
                 //TODO: To be removed once models are finalized and ready for final delivery.
                 //NOTE: Not good practice since it destroys all the data previously.
-                .fallbackToDestructiveMigration()
-                .build()
+             .build()
         }
     }
 }

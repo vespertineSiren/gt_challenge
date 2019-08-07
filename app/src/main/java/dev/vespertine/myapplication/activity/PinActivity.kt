@@ -1,13 +1,11 @@
 package dev.vespertine.myapplication.activity
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -15,24 +13,20 @@ import com.google.android.gms.location.LocationRequest
 import com.mapbox.android.core.location.LocationEngine
 import com.mapbox.android.core.location.LocationEngineProvider
 import com.mapbox.android.core.location.LocationEngineRequest
-import com.mapbox.android.core.location.LocationEngineResult
 import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
 import com.mapbox.geojson.Feature
 import com.mapbox.geojson.FeatureCollection
-import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.Mapbox
-import com.mapbox.mapboxsdk.geometry.LatLng
-import com.mapbox.mapboxsdk.location.CompassEngine
 import com.mapbox.mapboxsdk.location.LocationComponent
 import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions
 import com.mapbox.mapboxsdk.location.LocationComponentOptions
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapbox.mapboxsdk.maps.Style
-import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager
-import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions
-import com.mapbox.mapboxsdk.style.sources.GeoJsonOptions
+import com.mapbox.mapboxsdk.style.layers.PropertyFactory
+import com.mapbox.mapboxsdk.style.layers.SymbolLayer
+import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import dagger.android.AndroidInjection
 import dev.vespertine.myapplication.R
 import dev.vespertine.myapplication.adapter.PinAdapter
@@ -40,10 +34,6 @@ import dev.vespertine.myapplication.model.PinData
 import dev.vespertine.myapplication.view_model.PinViewModel
 import dev.vespertine.myapplication.view_model.PinViewModelFactory
 import kotlinx.android.synthetic.main.content_base.*
-import com.mapbox.mapboxsdk.plugins.annotation.Symbol
-import com.mapbox.mapboxsdk.style.layers.PropertyFactory
-import com.mapbox.mapboxsdk.style.layers.SymbolLayer
-import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import javax.inject.Inject
 
 const val MARKER_SOURCE : String = "markers-source"
@@ -73,9 +63,11 @@ class PinActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallback
 
         mapView.getMapAsync(this)
 
-        initRecyclerView()
+
         pinViewModel = ViewModelProviders.of(this, pinviewmodelFactory)
             .get(PinViewModel::class.java)
+
+        initRecyclerView()
 
         pinViewModel.loadPins()
 
@@ -104,6 +96,8 @@ class PinActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallback
 
 
             addPinsToMap(style)
+
+
 
 
             //TODO Work on this later.
@@ -138,6 +132,9 @@ class PinActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallback
                 PropertyFactory.iconOffset(arrayOf(0f, 0f))
             )
         )
+
+
+
 
     }
 
