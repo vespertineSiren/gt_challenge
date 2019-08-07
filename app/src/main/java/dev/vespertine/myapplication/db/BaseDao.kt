@@ -6,7 +6,7 @@ import io.reactivex.Completable
 import io.reactivex.Maybe
 
 @Dao
-interface BaseDao<in T> {
+interface BaseDao<T> {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(type: T)
 

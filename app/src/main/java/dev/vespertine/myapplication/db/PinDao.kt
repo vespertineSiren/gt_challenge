@@ -7,10 +7,10 @@ import io.reactivex.Maybe
 import io.reactivex.Single
 
 @Dao
-interface PinDao : BaseDao<PinData> {
+abstract class PinDao : BaseDao<PinData> {
 
     @Query("SELECT * FROM  pin_data ORDER BY pin_id ASC")
-    fun getAllPinsInIDOrder() : Single<List<PinData>>
+    abstract fun getAllPinsInIDOrder() : Single<List<PinData>>
 
 
 }

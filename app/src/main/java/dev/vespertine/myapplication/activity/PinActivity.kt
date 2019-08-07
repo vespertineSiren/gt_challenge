@@ -21,6 +21,8 @@ import com.mapbox.mapboxsdk.Mapbox
 import com.mapbox.mapboxsdk.location.LocationComponent
 import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions
 import com.mapbox.mapboxsdk.location.LocationComponentOptions
+import com.mapbox.mapboxsdk.location.modes.CameraMode
+import com.mapbox.mapboxsdk.location.modes.RenderMode
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapbox.mapboxsdk.maps.Style
@@ -93,15 +95,10 @@ class PinActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallback
 //            symbolManager = SymbolManager(mapView, map, style, null)
             style.addImage(MARKER_IMAGE, BitmapFactory.decodeResource(resources,R.drawable.pin))
 
-
-
             addPinsToMap(style)
 
-
-
-
             //TODO Work on this later.
-//            enableLocationComponent(style)
+            enableLocationComponent(style)
 
 //            val symbolOptions = SymbolOptions()
 //                .withLatLng(LatLng(35.652832,
@@ -143,17 +140,16 @@ class PinActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallback
 
         if (PermissionsManager.areLocationPermissionsGranted(this)) {
 
-            val lcOptions = LocationComponentOptions.builder(this)
-                .elevation(5f)
-                .accuracyAlpha(.6f)
-                .accuracyColor(Color.RED)
-                .foregroundDrawable(R.drawable.user)
-                .elevation(5f)
-                .build()
-
+//            val lcOptions = LocationComponentOptions.builder(this)
+//                .elevation(5f)
+//                .accuracyAlpha(.6f)
+//                .accuracyColor(Color.RED)
+//                .foregroundDrawable(BitmapFactory.decodeResource(resources,R.drawable.user))
+//                .elevation(5f)
+//                .build()
+//
             val lcAOption = LocationComponentActivationOptions
                 .builder(this, mapStyle)
-                .locationComponentOptions(lcOptions)
                 .build()
 
             locationComponent  = map.locationComponent
@@ -161,6 +157,8 @@ class PinActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallback
             locationComponent.apply {
                 activateLocationComponent(lcAOption)
                 isLocationComponentEnabled = true
+                cameraMode = CameraMode.TRACKING_COMPASS
+                renderMode = RenderMode.COMPASS
             }
 
             locationEngine = LocationEngineProvider.getBestLocationEngine(this)
