@@ -10,8 +10,8 @@ class PinRepository @Inject constructor(val api : GoTennaApi, val pinDao: PinDao
 
 
     fun getPins() : Observable<List<PinData>> {
-        var observableAPI = api.getPins().toObservable()
-        val observableDB = pinDao.getAllPinsInIDOrder().toObservable()
+        var observableAPI = api.getPins()
+        val observableDB = pinDao.getAllPinsInIDOrder()
         return Observable.concat(observableAPI, observableDB)
     }
 

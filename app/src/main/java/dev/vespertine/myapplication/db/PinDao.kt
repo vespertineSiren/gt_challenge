@@ -6,13 +6,14 @@ import androidx.room.Insert
 import androidx.room.Query
 import dev.vespertine.myapplication.model.PinData
 import io.reactivex.Maybe
+import io.reactivex.Observable
 import io.reactivex.Single
 
 @Dao
 interface PinDao : BaseDao<PinData> {
 
     @Query("SELECT * FROM  pin_data ORDER BY pin_id ASC")
-    fun getAllPinsInIDOrder() : Single<List<PinData>>
+    fun getAllPinsInIDOrder() : Observable<List<PinData>>
 
 
 }

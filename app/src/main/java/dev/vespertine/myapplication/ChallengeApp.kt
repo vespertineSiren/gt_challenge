@@ -32,9 +32,6 @@ class ChallengeApp : Application(), HasActivityInjector {
             .baseUrl(Utils.CHALLENGE_URL)
             .build().inject(this)
 
-
-
-
     }
 
     override fun activityInjector(): AndroidInjector<Activity> = activityInjector

@@ -62,16 +62,9 @@ class PinActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallback
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
 
-
-
-
-
-
-
-
-
-
         initRecyclerView()
+
+
 
         pinViewModel = ViewModelProviders.of(this, pinviewmodelFactory)
             .get(PinViewModel::class.java)

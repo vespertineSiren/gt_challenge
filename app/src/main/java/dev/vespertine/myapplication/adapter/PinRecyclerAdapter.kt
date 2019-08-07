@@ -19,7 +19,7 @@ class PinAdapter(
     class ViewHolder(view :View) : BaseViewHolder<PinData>(view) {
         @SuppressLint("SetTextI18n")
         override fun onBind(data : PinData) {
-            view.tv_pin_name_list.text = data.name + ": "
+            view.tv_pin_name_list.text = data.name
         }
     }
 

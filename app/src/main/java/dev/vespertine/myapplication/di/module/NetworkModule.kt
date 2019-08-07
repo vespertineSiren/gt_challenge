@@ -19,8 +19,8 @@ class NetworkModule {
     @Singleton
     fun providesOkHttpClient(): OkHttpClient {
         return OkHttpClient.Builder()
-            .readTimeout(Utils.READ_TIMEOUT, TimeUnit.MILLISECONDS)
-            .connectTimeout(Utils.CONNECT_TIMEOUT, TimeUnit.MILLISECONDS)
+//            .readTimeout(Utils.READ_TIMEOUT, TimeUnit.MILLISECONDS)
+//            .connectTimeout(Utils.CONNECT_TIMEOUT, TimeUnit.MILLISECONDS)
             .build()
     }
 
