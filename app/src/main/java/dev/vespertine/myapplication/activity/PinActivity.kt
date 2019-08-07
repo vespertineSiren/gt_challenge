@@ -2,6 +2,7 @@ package dev.vespertine.myapplication.activity
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -117,13 +118,16 @@ class PinActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallback
         if (PermissionsManager.areLocationPermissionsGranted(this)) {
 
             val lcOptions = LocationComponentOptions.builder(this)
+                .elevation(5f)
+                .accuracyAlpha(.6f)
+                .accuracyColor(Color.RED)
                 .foregroundDrawable(R.drawable.user)
                 .elevation(5f)
                 .build()
 
             val lcAOption = LocationComponentActivationOptions
                 .builder(this, mapStyle)
-                .useDefaultLocationEngine(true)
+                .locationComponentOptions(lcOptions)
                 .build()
 
             locationComponent  = map.locationComponent
