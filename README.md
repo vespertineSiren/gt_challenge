@@ -2,7 +2,7 @@
 
 Challenge took roughly 11-13 hours to complete. Would have been much shorter if I found the starter code generator available on MapBox's website. 
 
-#Bonus Features
+# Bonus Features
 - Implementation of the repository pattern. Will pull from database if no internet connection. 
 - Use of Room database 
 - Extensive use of rxjava. Most notably seen within the repository. 
@@ -12,7 +12,7 @@ Challenge took roughly 11-13 hours to complete. Would have been much shorter if 
 - Use of inheritance within the viewmodel and implementation of disposable that respects the lifecycle
 - An absolutely fabulous icon that you'll surely enjoy!
 
-#Potential features to add
+# Potential features to add
 - Introduction of longclick to add points. 
 - Editing the points 
 - Icons change depending on keywords in description
