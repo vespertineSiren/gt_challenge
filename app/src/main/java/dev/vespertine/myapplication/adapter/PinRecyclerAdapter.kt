@@ -10,8 +10,8 @@ import dev.vespertine.myapplication.model.PinData
 import kotlinx.android.synthetic.main.pin_list_element_layout.view.*
 
 class PinAdapter(
-    val pins: MutableList<PinData> = mutableListOf(),
-    val listener: (PinData) -> Unit
+    private val pins: MutableList<PinData> = mutableListOf(),
+    private val listener: (PinData) -> Unit
 ) : RecyclerView.Adapter<PinAdapter.ViewHolder>() {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -27,7 +27,7 @@ class PinAdapter(
 
     class ViewHolder(view : View) : RecyclerView.ViewHolder(view) {
 
-        val pinName :TextView = view.tv_pin_name_list
+        private val pinName :TextView = view.tv_pin_name_list
 
         fun bind(data : PinData, listener: (PinData) -> Unit) = with(itemView) {
             pinName.text = data.name

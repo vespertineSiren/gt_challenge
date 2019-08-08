@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import dev.vespertine.myapplication.model.PinData
 
-const val DATABASE_SCHEMA_VERSION = 1
+const val DATABASE_SCHEMA_VERSION = 2
 const val DB_NAME = "local-db"
 
 @Database(
@@ -30,8 +30,6 @@ abstract class PinRoomDatabase: RoomDatabase(){
 
         private fun createDatabase(context: Context): PinRoomDatabase {
             return Room.databaseBuilder(context, PinRoomDatabase::class.java, DB_NAME)
-                //TODO: To be removed once models are finalized and ready for final delivery.
-                //NOTE: Not good practice since it destroys all the data previously.
              .build()
         }
     }

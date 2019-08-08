@@ -11,14 +11,14 @@ class PinRepository @Inject constructor(val api : GoTennaApi, val pinDao: PinDao
 
     fun getPins() : Single<List<PinData>> {
         return api.getPins()
-            .onErrorResumeNext(
-                pinDao.getAllPinsInIDOrder())
             .doOnSuccess{
                 savePins(it)
             }
+            .onErrorResumeNext(
+                pinDao.getAllPinsInIDOrder())
     }
 
-    fun savePins(list: List<PinData>) {
+    private fun savePins(list: List<PinData>) {
         pinDao.insertAll(list)
     }
 }

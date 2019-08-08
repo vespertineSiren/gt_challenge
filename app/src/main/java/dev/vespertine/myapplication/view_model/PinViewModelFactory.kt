@@ -8,7 +8,7 @@ class PinViewModelFactory @Inject constructor(
     private val pinViewModel: PinViewModel) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        if(modelClass.isAssignableFrom(PinViewModel::class.java!!)) {
+        if(modelClass.isAssignableFrom(PinViewModel::class.java)) {
             return  pinViewModel as T
         }
         throw IllegalArgumentException("Unknown class name")

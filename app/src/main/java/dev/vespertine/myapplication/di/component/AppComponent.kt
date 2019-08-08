@@ -22,7 +22,7 @@ interface AppComponent {
         @BindsInstance
         fun application(application: Application) : Builder
         @BindsInstance
-        fun baseUrl(url : String) : AppComponent.Builder //For testing mockserver*/
+        fun baseUrl(url : String) : Builder //For testing mockserver*/
         fun build(): AppComponent
     }
 

@@ -3,7 +3,6 @@ package dev.vespertine.myapplication.db
 import androidx.room.*
 import dev.vespertine.myapplication.model.PinData
 import io.reactivex.Completable
-import io.reactivex.Maybe
 
 @Dao
 interface BaseDao<T> {

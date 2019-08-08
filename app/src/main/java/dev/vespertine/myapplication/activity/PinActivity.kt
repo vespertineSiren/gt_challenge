@@ -61,10 +61,10 @@ class PinActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallback
 
         mapView.getMapAsync(this)
 
+        initRecyclerView()
+
         pinViewModel = ViewModelProviders.of(this, pinviewmodelFactory)
             .get(PinViewModel::class.java)
-
-        initRecyclerView()
 
         pinViewModel.loadPins()
 
@@ -88,18 +88,17 @@ class PinActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallback
         })
 
         b_my_location.setOnClickListener {
-            val position = CameraPosition.Builder()
-                .target(userLatLng)
-                .zoom(17.0)
-                .build()
+            if(this::userLatLng.isInitialized){
+                val position = CameraPosition.Builder()
+                    .target(userLatLng)
+                    .zoom(17.0)
+                    .build()
 
-            map.animateCamera(CameraUpdateFactory.newCameraPosition(position), 3000)
-            changeUIandMap(null)
+                map.animateCamera(CameraUpdateFactory.newCameraPosition(position), 3000)
+                changeUIandMap(null)
+            }
         }
-
     }
-
-
 
     override fun onMapReady(mapboxMap: MapboxMap) {
         map = mapboxMap
@@ -114,14 +113,13 @@ class PinActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallback
         }
     }
 
-    fun addPinsToMap(mapStyle: Style) {
+    private fun addPinsToMap(mapStyle: Style) {
 
         pinViewModel.getPinPoints().observe(this, Observer<List<Feature>> {
             it?.apply {
                 mapStyle.addSource(GeoJsonSource(MARKER_SOURCE, FeatureCollection.fromFeatures(it)))
             }
         })
-
 
         mapStyle.addLayer(SymbolLayer(MARKER_STYLE_LAYER, MARKER_SOURCE)
             .withProperties(
@@ -131,10 +129,6 @@ class PinActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallback
                 PropertyFactory.iconOffset(arrayOf(0f, 0f))
             )
         )
-
-
-
-
     }
 
     @SuppressLint("MissingPermission")
@@ -164,17 +158,14 @@ class PinActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallback
             val locUser = locManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
             userLatLng = LatLng(locUser.latitude, locUser.longitude)
 
-
         } else {
             permissionManager = PermissionsManager(this)
             permissionManager.requestLocationPermissions(this)
         }
     }
 
-
-
     fun initRecyclerView() {
-        pinAdapter = PinAdapter(mutableListOf()) {it->
+        pinAdapter = PinAdapter(mutableListOf()) {
             pinViewModel.setPickedPin(it)
         }
         rv_pin.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
@@ -194,19 +185,6 @@ class PinActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallback
             tv_pin_long_clicked.text = userLatLng.longitude.toString()
             tv_pin_desc_clicked.text = getString(R.string.click_loc_desc)
         }
-
-//        focusPin?.let {
-//            tv_pin_name_clicked.text = it.name
-//            tv_pin_lat_clicked.text = it.latitude.toString()
-//            tv_pin_long_clicked.text = it.longitude.toString()
-//            tv_pin_desc_clicked.text = it.description
-//        } ?: run {
-//            tv_pin_name_clicked.text = getString(R.string.click_name)
-//            tv_pin_lat_clicked.text =
-//            tv_pin_long_clicked.text = it.longitude.toString()
-//            tv_pin_desc_clicked.text = it.description
-//        }
-
     }
 
     override fun onExplanationNeeded(permissionsToExplain: MutableList<String>?) {

@@ -3,7 +3,6 @@ package dev.vespertine.myapplication.db
 import androidx.room.Dao
 import androidx.room.Query
 import dev.vespertine.myapplication.model.PinData
-import io.reactivex.Maybe
 import io.reactivex.Single
 
 @Dao

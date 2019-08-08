@@ -28,7 +28,7 @@ class PinViewModel @Inject constructor(private val pinRepository: PinRepository)
                 { it->pinLiveData.postValue(it)
                     val features = mutableListOf<Feature>()
                     it.forEach {
-                        features.add(Feature.fromGeometry(Point.fromLngLat(it.longitude!!, it.latitude!!)))
+                        features.add(Feature.fromGeometry(Point.fromLngLat(it.longitude, it.latitude)))
                         pinFeatureLiveData.postValue(features)
                     }
                 },
