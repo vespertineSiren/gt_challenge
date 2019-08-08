@@ -1,6 +1,5 @@
 package dev.vespertine.myapplication.adapter
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,20 +10,33 @@ import dev.vespertine.myapplication.model.PinData
 import kotlinx.android.synthetic.main.pin_list_element_layout.view.*
 
 class PinAdapter(
-    pins: MutableList<PinData> = mutableListOf()
-) : BaseRecyclerAdapter<PinData>(pins){
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
-        ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.pin_list_element_layout, parent, false))
+    val pins: MutableList<PinData> = mutableListOf(),
+    val listener: (PinData) -> Unit
+) : RecyclerView.Adapter<PinAdapter.ViewHolder>() {
 
-    class ViewHolder(view :View) : BaseViewHolder<PinData>(view) {
-        @SuppressLint("SetTextI18n")
-        override fun onBind(data : PinData) {
-            view.tv_pin_name_list.text = data.name
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.bind(pins[position], listener)
+    }
+
+
+    override fun getItemCount(): Int = pins.size
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.pin_list_element_layout, parent, false))
+    }
+
+    class ViewHolder(view : View) : RecyclerView.ViewHolder(view) {
+
+        val pinName :TextView = view.tv_pin_name_list
+
+        fun bind(data : PinData, listener: (PinData) -> Unit) = with(itemView) {
+            pinName.text = data.name
+            setOnClickListener { listener(data) }
         }
     }
 
     fun setPins(data : List<PinData>) {
-        masterList.addAll(data)
+        pins.addAll(data)
         notifyDataSetChanged()
     }
 }

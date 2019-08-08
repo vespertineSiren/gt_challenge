@@ -14,8 +14,10 @@ import javax.inject.Inject
 
 class PinViewModel @Inject constructor(private val pinRepository: PinRepository) : BaseViewModel() {
 
-    private val pinLiveData : MutableLiveData<List<PinData>>  = MutableLiveData()
-    private val pinFeatureLiveData : MutableLiveData<List<Feature>> = MutableLiveData()
+    private val pickedPinLiveData : MutableLiveData<PinData> by lazy {MutableLiveData<PinData>()}
+    private val pinLiveData : MutableLiveData<List<PinData>>  by lazy { MutableLiveData<List<PinData>>()}
+    private val pinFeatureLiveData : MutableLiveData<List<Feature>> by lazy { MutableLiveData<List<Feature>>() }
+
 
 
     fun loadPins() {
@@ -26,10 +28,9 @@ class PinViewModel @Inject constructor(private val pinRepository: PinRepository)
                 { it->pinLiveData.postValue(it)
                     val features = mutableListOf<Feature>()
                     it.forEach {
-                        features.add(Feature.fromGeometry(Point.fromLngLat(it.longitude, it.latitude)))
+                        features.add(Feature.fromGeometry(Point.fromLngLat(it.longitude!!, it.latitude!!)))
                         pinFeatureLiveData.postValue(features)
                     }
-
                 },
                 {err-> Log.e("Error Messgage", err.toString())}
             )
@@ -38,8 +39,15 @@ class PinViewModel @Inject constructor(private val pinRepository: PinRepository)
 
     fun getPins() : LiveData<List<PinData>> = pinLiveData
 
+    fun getpickedPin() = pickedPinLiveData
 
     fun getPinPoints() : LiveData<List<Feature>> = pinFeatureLiveData
+
+    fun setPickedPin(selected : PinData) {
+        pickedPinLiveData.value = selected
+    }
+
+
 
 
 

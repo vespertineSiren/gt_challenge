@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
+import java.lang.reflect.Constructor
 
 
 @Entity(tableName = "pin_data")
@@ -19,10 +20,3 @@ data class PinData(
     val name: String
 )
 
-data class Fake(
-    val description: String,
-    val id: Int,
-    val latitude: Double,
-    val longitude: Double,
-    val name: String
-)

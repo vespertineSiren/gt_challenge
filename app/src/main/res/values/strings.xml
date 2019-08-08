@@ -6,7 +6,11 @@
     <string name="pin_name_text">Name:</string>
     <string name="pin_lat_text">Latitude:</string>
     <string name="pin_long_text">Longitude:</string>
-    <string name="tv_pin_long_text">Longitude</string>
-    <string name="tv_pn_desc">Description</string>
+    <string name="tv_pin_long_text">Longitude:</string>
+    <string name="tv_pn_desc">Description:</string>
+    <string name="click_name">This is you!</string>
+    <string name="click_loc_desc">You might like hanging out at this place or you might really hate this place. Who
+        knows? I\'m not the one to judge.
+    </string>
 
 </resources>

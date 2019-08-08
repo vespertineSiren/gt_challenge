@@ -1,27 +1,25 @@
 package dev.vespertine.myapplication.activity
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.graphics.BitmapFactory
-import android.graphics.Color
+import android.location.LocationManager
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
-import com.google.android.gms.location.LocationRequest
-import com.mapbox.android.core.location.LocationEngine
-import com.mapbox.android.core.location.LocationEngineProvider
-import com.mapbox.android.core.location.LocationEngineRequest
 import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
 import com.mapbox.geojson.Feature
 import com.mapbox.geojson.FeatureCollection
 import com.mapbox.mapboxsdk.Mapbox
+import com.mapbox.mapboxsdk.camera.CameraPosition
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
+import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.location.LocationComponent
 import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions
 import com.mapbox.mapboxsdk.location.LocationComponentOptions
-import com.mapbox.mapboxsdk.location.modes.CameraMode
 import com.mapbox.mapboxsdk.location.modes.RenderMode
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
@@ -42,18 +40,16 @@ const val MARKER_SOURCE : String = "markers-source"
 const val MARKER_STYLE_LAYER = "markers-style-layer"
 const val MARKER_IMAGE  = "custom-marker"
 
-class PinActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallback {
-
+class PinActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallback{
 
     @Inject
     lateinit var pinviewmodelFactory: PinViewModelFactory
     lateinit var pinViewModel: PinViewModel
     lateinit var pinAdapter : PinAdapter
     lateinit var permissionManager: PermissionsManager
-    lateinit var map : MapboxMap
+    private lateinit var map : MapboxMap
     lateinit var locationComponent : LocationComponent
-    lateinit var locationEngine: LocationEngine
-
+    lateinit var userLatLng: LatLng
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,7 +60,6 @@ class PinActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallback
         mapView.onCreate(savedInstanceState)
 
         mapView.getMapAsync(this)
-
 
         pinViewModel = ViewModelProviders.of(this, pinviewmodelFactory)
             .get(PinViewModel::class.java)
@@ -80,7 +75,27 @@ class PinActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallback
                 }
             })
 
+        pinViewModel.getpickedPin().observe(this, Observer<PinData> {
+            if(it != null) {
+                changeUIandMap(it)
+                val position = CameraPosition.Builder()
+                    .target(LatLng(it.latitude, it.longitude))
+                    .zoom(17.0)
+                    .build()
 
+                map.animateCamera(CameraUpdateFactory.newCameraPosition(position), 3000)
+            }
+        })
+
+        b_my_location.setOnClickListener {
+            val position = CameraPosition.Builder()
+                .target(userLatLng)
+                .zoom(17.0)
+                .build()
+
+            map.animateCamera(CameraUpdateFactory.newCameraPosition(position), 3000)
+            changeUIandMap(null)
+        }
 
     }
 
@@ -91,26 +106,12 @@ class PinActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallback
 
         map.setStyle(Style.MAPBOX_STREETS) {
             style ->
-//            val geoJsonOptions = GeoJsonOptions().withTolerance(0.4f)
-//            symbolManager = SymbolManager(mapView, map, style, null)
             style.addImage(MARKER_IMAGE, BitmapFactory.decodeResource(resources,R.drawable.pin))
 
             addPinsToMap(style)
 
-            //TODO Work on this later.
             enableLocationComponent(style)
-
-//            val symbolOptions = SymbolOptions()
-//                .withLatLng(LatLng(35.652832,
-//                    139.839478))
-//                .withIconImage("pin")
-//                .withIconSize(1.0f)
-//            //    .withTextField("A place of Fun")
-//                .withSymbolSortKey(10.0f)
-//                .withDraggable(false)
-//            symbol = symbolManager.create(symbolOptions)
         }
-
     }
 
     fun addPinsToMap(mapStyle: Style) {
@@ -120,6 +121,7 @@ class PinActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallback
                 mapStyle.addSource(GeoJsonSource(MARKER_SOURCE, FeatureCollection.fromFeatures(it)))
             }
         })
+
 
         mapStyle.addLayer(SymbolLayer(MARKER_STYLE_LAYER, MARKER_SOURCE)
             .withProperties(
@@ -140,16 +142,14 @@ class PinActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallback
 
         if (PermissionsManager.areLocationPermissionsGranted(this)) {
 
-//            val lcOptions = LocationComponentOptions.builder(this)
-//                .elevation(5f)
-//                .accuracyAlpha(.6f)
-//                .accuracyColor(Color.RED)
-//                .foregroundDrawable(BitmapFactory.decodeResource(resources,R.drawable.user))
-//                .elevation(5f)
-//                .build()
-//
+            val lcOptions = LocationComponentOptions.builder(this)
+                .elevation(5f)
+                .foregroundDrawable(R.drawable.franxx)
+                .build()
+
             val lcAOption = LocationComponentActivationOptions
                 .builder(this, mapStyle)
+                .locationComponentOptions(lcOptions)
                 .build()
 
             locationComponent  = map.locationComponent
@@ -157,21 +157,12 @@ class PinActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallback
             locationComponent.apply {
                 activateLocationComponent(lcAOption)
                 isLocationComponentEnabled = true
-                cameraMode = CameraMode.TRACKING_COMPASS
                 renderMode = RenderMode.COMPASS
             }
 
-            locationEngine = LocationEngineProvider.getBestLocationEngine(this)
-            Log.v("Permission", ": Granted")
-
-
-
-//            user = PinData("Test", 99,
-//                map.locationComponent.lastKnownLocation!!.latitude,
-//                map.locationComponent.lastKnownLocation!!.longitude, "Test User")
-
-
-
+            val locManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            val locUser = locManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+            userLatLng = LatLng(locUser.latitude, locUser.longitude)
 
 
         } else {
@@ -180,29 +171,51 @@ class PinActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallback
         }
     }
 
-    fun initLocationEngine(){
-        locationEngine = LocationEngineProvider.getBestLocationEngine(this)
-        val request = LocationEngineRequest.Builder(1000L)
-            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-            .setMaxWaitTime(5000L)
-            .build()
 
-    }
 
     fun initRecyclerView() {
-        pinAdapter = PinAdapter(mutableListOf())
+        pinAdapter = PinAdapter(mutableListOf()) {it->
+            pinViewModel.setPickedPin(it)
+        }
         rv_pin.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
         rv_pin.adapter = pinAdapter
     }
 
+    private fun changeUIandMap(focusPin: PinData? = null) {
+
+        if(focusPin != null) {
+            tv_pin_name_clicked.text = focusPin.name
+            tv_pin_lat_clicked.text = focusPin.latitude.toString()
+            tv_pin_long_clicked.text = focusPin.longitude.toString()
+            tv_pin_desc_clicked.text = focusPin.description
+        } else {
+            tv_pin_name_clicked.text = getString(R.string.click_name)
+            tv_pin_lat_clicked.text = userLatLng.latitude.toString()
+            tv_pin_long_clicked.text = userLatLng.longitude.toString()
+            tv_pin_desc_clicked.text = getString(R.string.click_loc_desc)
+        }
+
+//        focusPin?.let {
+//            tv_pin_name_clicked.text = it.name
+//            tv_pin_lat_clicked.text = it.latitude.toString()
+//            tv_pin_long_clicked.text = it.longitude.toString()
+//            tv_pin_desc_clicked.text = it.description
+//        } ?: run {
+//            tv_pin_name_clicked.text = getString(R.string.click_name)
+//            tv_pin_lat_clicked.text =
+//            tv_pin_long_clicked.text = it.longitude.toString()
+//            tv_pin_desc_clicked.text = it.description
+//        }
+
+    }
+
     override fun onExplanationNeeded(permissionsToExplain: MutableList<String>?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun onPermissionResult(granted: Boolean) {
         if(granted){
-            map.getStyle {
-                enableLocationComponent(it)
+           map.getStyle {
+               enableLocationComponent(it)
             }
         } else {
             finish()
@@ -250,10 +263,3 @@ class PinActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallback
 }
 
 
-
-
-//        map.setStyle(Style.MAPBOX_STREETS)
-//        map.style?.addImage("icon", BitmapFactory
-//            .decodeResource(this@PinActivity.resources,R.drawable.pin_drop))
-//        map.style?.addImage("pin", BitmapUtils.getBitmapFromDrawable(ContextCompat.getDrawable(this, R.drawable.pin_drop))!!)
-//        map.setStyle(Style.Builder().fromUri(Style.MAPBOX_STREETS).withImage("pin", (ContextCompat.getDrawable(this, R.drawable.pin_drop))!!))
