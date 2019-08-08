@@ -63,17 +63,33 @@ class PinActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallback
 
         initRecyclerView()
 
+        observePins()
+
+        b_my_location.setOnClickListener {
+            if(this::userLatLng.isInitialized){
+                val position = CameraPosition.Builder()
+                    .target(userLatLng)
+                    .zoom(17.0)
+                    .build()
+
+                map.animateCamera(CameraUpdateFactory.newCameraPosition(position), 3000)
+                changeUIandMap()
+            }
+        }
+    }
+
+    fun observePins() {
         pinViewModel = ViewModelProviders.of(this, pinviewmodelFactory)
             .get(PinViewModel::class.java)
 
         pinViewModel.loadPins()
 
         pinViewModel.getPins().observe(this, Observer<List<PinData>> {
-                if (it != null) {
-                    pinAdapter.setPins(it)
-                    rv_pin.adapter = pinAdapter
-                }
-            })
+            if (it != null) {
+                pinAdapter.setPins(it)
+                rv_pin.adapter = pinAdapter
+            }
+        })
 
         pinViewModel.getpickedPin().observe(this, Observer<PinData> {
             if(it != null) {
@@ -86,18 +102,6 @@ class PinActivity : AppCompatActivity(), PermissionsListener, OnMapReadyCallback
                 map.animateCamera(CameraUpdateFactory.newCameraPosition(position), 3000)
             }
         })
-
-        b_my_location.setOnClickListener {
-            if(this::userLatLng.isInitialized){
-                val position = CameraPosition.Builder()
-                    .target(userLatLng)
-                    .zoom(17.0)
-                    .build()
-
-                map.animateCamera(CameraUpdateFactory.newCameraPosition(position), 3000)
-                changeUIandMap(null)
-            }
-        }
     }
 
     override fun onMapReady(mapboxMap: MapboxMap) {
